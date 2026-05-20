@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Edrak Professional Portal</title>
+    <title>HR Professional Portal</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -11,11 +11,12 @@
     <link rel="apple-touch-icon" href="icon.png">
     <style>
         :root {
-           --edrak-blue: #1A3668;
-           --edrak-red: #E31D2B;
-           --edrak-orange: #F37021;
-            --soft-bg: #F0F4F8;
-            --text-dark: #2C3E50;
+           --HR-blue: #1A3668;
+           --HR-red: #E31D2B;
+           --HR-orange: #F37021;
+            --soft-bg: #F8FAFC;
+            --text-dark: #1E293B;
+            --sidebar-bg: #F1F5F9;
         }
         body {
            background-color: var(--soft-bg);
@@ -26,58 +27,133 @@
         }
         .navbar {
            background: white;
-           box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 10px 5%;
+           box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: 12px 5%;
             position: sticky; top: 0; z-index: 1000;
         }
-        .offcanvas { width: 300px !important; border: none; box-shadow: 5px 0 20px rgba(0,0,0,0.1); }
-    
-       .sidebar-header {
-           background: var(--edrak-blue);
-           color: white;
-            padding: 30px 20px;
+        
+        /* تصميم الـ Offcanvas كـ تطبيق موبايل */
+        .offcanvas { 
+            width: 320px !important; 
+            border: none; 
+            box-shadow: 10px 0 30px rgba(0,0,0,0.08); 
+            background-color: var(--sidebar-bg) !important;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--HR-blue) 0%, #102244 100%);
+            color: white;
+            padding: 30px 24px;
+            position: relative;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(26, 54, 104, 0.2);
+        }
+        .sidebar-header .btn-close-white {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        html[dir="ltr"] .sidebar-header .btn-close-white {
+            left: auto;
+            right: 20px;
+        }
+        .sidebar-header .btn-close-white:hover {
+            opacity: 1;
+            transform: rotate(90deg);
         }
     
-       .nav-link-sidebar {
-            padding: 18px 25px;
+        /* تنسيق الروابط كأنها كروت داخل تطبيق */
+        .nav-links-wrapper {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-link-sidebar {
+            padding: 14px 18px;
             color: var(--text-dark);
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            transition: 0.3s;
-            font-weight: 500;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0, 0, 0, 0.01);
         }
     
-       .nav-link-sidebar i {
-            color: var(--edrak-orange);
-            width: 24px;
-            text-align: center;
+        .nav-link-sidebar .link-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
-       .nav-link-sidebar:hover {
-            background: #E8EFCF;
-            color: var(--edrak-blue);
+
+        .nav-link-sidebar i {
+            color: var(--HR-blue);
+            width: 36px;
+            height: 36px;
+            background: rgba(26, 54, 104, 0.06);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
-        /* الرقم الأحمر الدائري */
+        
+        .nav-link-sidebar .arrow-icon {
+            font-size: 0.8rem;
+            color: #94A3B8;
+            transition: transform 0.3s ease;
+            background: none !important;
+            width: auto; height: auto;
+        }
+
+        /* حركات التمرير والضغط المؤثرة */
+        .nav-link-sidebar:hover {
+            background: white;
+            color: var(--HR-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            border-color: rgba(243, 112, 33, 0.2);
+        }
+        .nav-link-sidebar:hover i {
+            background: rgba(243, 112, 33, 0.1);
+            color: var(--HR-orange);
+            transform: scale(1.05);
+        }
+        .nav-link-sidebar:hover .arrow-icon {
+            color: var(--HR-orange);
+            transform: translateX(-4px);
+        }
+        html[dir="ltr"] .nav-link-sidebar:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        /* الرقم الأحمر الدائري للإشعارات */
         .notification-badge {
-            background-color: #E31D2B;
+            background-color: var(--HR-red);
             color: white;
             font-weight: bold;
-            font-size: 15px;
-            min-width: 24px;
-            height: 24px;
+            font-size: 12px;
+            min-width: 20px;
+            height: 20px;
             display: none;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(227, 29, 43, 0.5);
+            box-shadow: 0 2px 8px rgba(227, 29, 43, 0.4);
+            padding: 0 4px;
         }
-        .nav-link-notif {
-            justify-content: space-between !important;
-            align-items: center;
-        }
-       .hero-container {
+        
+        .hero-container {
             height: calc(100vh - 80px);
             display: flex;
             align-items: center;
@@ -122,9 +198,9 @@
             border-bottom: 2px solid #eee;
         }
     
-       .modal-title-text { color: var(--edrak-blue); font-weight: bold; }
+       .modal-title-text { color: var(--HR-blue); font-weight: bold; }
        .btn-back-style {
-           background: var(--edrak-blue);
+           background: var(--HR-blue);
             color: white;
             border: none;
             padding: 8px 25px;
@@ -136,101 +212,158 @@
             cursor: pointer;
            transition: 0.3s;
         }
-       .btn-back-style:hover { background: var(--edrak-red); }
+       .btn-back-style:hover { background: var(--HR-red); }
         #globalLoader { position: absolute; top: 65px; left: 0; right: 0; bottom: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1200; }
       
         .loader-visual {
             width: 50px; height: 50px;
             border: 4px solid #f3f3f3;
-           border-top: 4px solid var(--edrak-orange);
+           border-top: 4px solid var(--HR-orange);
            border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       
-        #loadingTxt { color: var(--edrak-blue); }
+        #loadingTxt { color: var(--HR-blue); }
         iframe { width: 100%; height: calc(100vh - 65px); border: none; display: block; visibility: hidden; }
     
         .lang-toggle {
             cursor: pointer;
             padding: 6px 18px;
-            border: 2px solid var(--edrak-blue);
+            border: 2px solid var(--HR-blue);
            border-radius: 25px;
-            color: var(--edrak-blue);
+            color: var(--HR-blue);
            font-weight: bold;
            transition: 0.3s;
         }
-       .lang-toggle:hover { background: var(--edrak-blue); color: white; }
+       .lang-toggle:hover { background: var(--HR-blue); color: white; }
     </style>
 </head>
 <body>
 <nav class="navbar d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
         <button class="btn p-0 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-            <i class="fas fa-bars fa-2x"></i>
+            <i class="fas fa-bars fa-2x" style="color: var(--HR-blue);"></i>
        </button>
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s" height="40" alt="Logo">
     </div>
     <div class="lang-toggle" onclick="toggleLanguage()" id="langBtn">EN</div>
 </nav>
+
 <div class="offcanvas offcanvas-start" id="sidebarMenu">
     <div class="sidebar-header">
-        <h4 id="sideTitle">نظام إدراك</h4>
-        <p class="small mb-0 opacity-75 txt-hr-desc">Edrak HR System</p>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h4 id="sideTitle" class="fw-bold mb-1">HR System</h4>
+        <p class="small mb-0 opacity-75 txt-hr-desc">HR System Portal</p>
     </div>
     <div class="offcanvas-body p-0">
-        <a href="#" onclick="requestLocAndOpen('https://script.google.com/macros/s/AKfycbw0bOHL31qZ57HCUARa9sLYHKjXo7ZGTv83V2E-d5rm9HZpaWnyszKvkdNElrarSfNXWw/exec', 'Fingerprint location')" class="nav-link-sidebar">
-            <span><i class="fas fa-fingerprint"></i> <span class="txt-finger">البصمة </span></span>
+        <div class="nav-links-wrapper">
+            
+            <a href="#" onclick="requestLocAndOpen('https://script.google.com/macros/s/AKfycbw0bOHL31qZ57HCUARa9sLYHKjXo7ZGTv83V2E-d5rm9HZpaWnyszKvkdNElrarSfNXWw/exec', 'Fingerprint location')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-fingerprint"></i> 
+                    <span class="txt-finger">البصمة</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycby3sRnDovvRif0P6UaJC0Te7AqrJFxh37nfqKsv3I_fDFIgx8Eb_WLmwn6G615g5kjCKg/exec', 'Employee Data')" class="nav-link-sidebar">
-            <span><i class="fas fa-users-cog"></i> <span class="txt-db">بيانات الموظفين</span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzcnRfDxxMp1roSLLlj7dCJsgblAsOJ7xm5Lxc171r5OvSzP5Z6AJtIl5rr34MjJ6I/exec', 'Payroll')" class="nav-link-sidebar">
-            <span><i class="fas fa-file-invoice-dollar"></i> <span class="txt-payroll">مفردات المرتب</span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyE_qmb02Dno6p2XkaIk4hr8bIwIJcjrolwqojIFJlxxYifAJVpuXU3NMowbbGKIyUL2A/exec', 'Vacations')" class="nav-link-sidebar">
-            <span><i class="fas fa-calendar-alt"></i> <span class="txt-vacation">الإجازات والأذونات</span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyxdopBn-GEnTJPdFKbgyrZGTHPDxNM2dao7emfUbQqF5YoMDh70y6hEKBbIcw-iytz/exec', 'HR Archive')" class="nav-link-sidebar">
-            <span><i class="fas fa-archive"></i> <span class="txt-archive">أرشيف ملفات الموظفين</span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwCXvhns4jdblvOZs2SuhXQ8tIEKvdRGpFHB7rnx_afvjHoOPMWebLTYY6Eyuqj1Vrn/exec', 'HR Renewal System')" class="nav-link-sidebar">
-            <span><i class="fas fa-sync-alt"></i> <span class="txt-renewal">نظام التجديدات</span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzxTPbIadUCrPPIayD7L5X_4VHg_5JiX71IKXgjctiE8CRVuKqBHM2sjOaCbU68tSMiAA/exec', 'HR Letter')" class="nav-link-sidebar">
-            <span><i class="fas fa-file-signature"></i> <span class="txt-hr-letter">خطابات الموارد البشرية</span></span>
-        </a>
-              
-        <!-- رابط الإشعارات -->
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec', 'Notifications')"
-           class="nav-link-sidebar nav-link-notif">
-            <span class="d-flex align-items-center gap-3">
-                <i class="fas fa-bell"></i>
-                <span class="txt-notif">الإشعارات الحديثة</span>
-            </span>
-            <span id="notifBadge" class="notification-badge">0</span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzjop_c-iMQUaT5VFcZvr8YIYn2YCBp1xqItNSahOAhLw0zXHNEuCMIGXEPB6rm83JaBw/exec', 'Contact')" class="nav-link-sidebar">
-            <span><i class="fas fa-comments"></i> <span class="txt-contact">تواصل معنا ( اقتراح / شكوي ) </span></span>
-        </a>
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwLJtBzKsVmANy-yM6ZnRmZqQbuG2boMVxWgFaHZbAJt3H6c7YStUBPpnRVfnlN1KNV/exec', 'Information ')" class="nav-link-sidebar">
-            <span><i class="fas fa-chart-bar"></i> <span class="txt-reports">معلومات تهمك </span></span>
-        </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycby3sRnDovvRif0P6UaJC0Te7AqrJFxh37nfqKsv3I_fDFIgx8Eb_WLmwn6G615g5kjCKg/exec', 'Employee Data')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-users-cog"></i> 
+                    <span class="txt-db">بيانات الموظفين</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzcnRfDxxMp1roSLLlj7dCJsgblAsOJ7xm5Lxc171r5OvSzP5Z6AJtIl5rr34MjJ6I/exec', 'Payroll')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-file-invoice-dollar"></i> 
+                    <span class="txt-payroll">مفردات المرتب</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyE_qmb02Dno6p2XkaIk4hr8bIwIJcjrolwqojIFJlxxYifAJVpuXU3NMowbbGKIyUL2A/exec', 'Vacations')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-calendar-alt"></i> 
+                    <span class="txt-vacation">الإجازات والأذونات</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyxdopBn-GEnTJPdFKbgyrZGTHPDxNM2dao7emfUbQqF5YoMDh70y6hEKBbIcw-iytz/exec', 'HR Archive')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-archive"></i> 
+                    <span class="txt-archive">أرشيف ملفات الموظفين</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwCXvhns4jdblvOZs2SuhXQ8tIEKvdRGpFHB7rnx_afvjHoOPMWebLTYY6Eyuqj1Vrn/exec', 'HR Renewal System')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-sync-alt"></i> 
+                    <span class="txt-renewal">نظام التجديدات</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzxTPbIadUCrPPIayD7L5X_4VHg_5JiX71IKXgjctiE8CRVuKqBHM2sjOaCbU68tSMiAA/exec', 'HR Letter')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-file-signature"></i> 
+                    <span class="txt-hr-letter">خطابات الموارد البشرية</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+                  
+            <!-- رابط الإشعارات -->
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec', 'Notifications')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-bell"></i>
+                    <span class="txt-notif">الإشعارات الحديثة</span>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <span id="notifBadge" class="notification-badge">0</span>
+                    <i class="fas fa-chevron-left arrow-icon"></i>
+                </span>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzjop_c-iMQUaT5VFcZvr8YIYn2YCBp1xqItNSahOAhLw0zXHNEuCMIGXEPB6rm83JaBw/exec', 'Contact')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-comments"></i> 
+                    <span class="txt-contact">تواصل معنا ( اقتراح / شكوي )</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwLJtBzKsVmANy-yM6ZnRmZqQbuG2boMVxWgFaHZbAJt3H6c7YStUBPpnRVfnlN1KNV/exec', 'Information ')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-info-circle"></i> 
+                    <span class="txt-guide">معلومات تهمك</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
 
-        <!-- رابط التقارير (الجديد) -->
-        <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbx7j7bF_PaFEbYWqyWz7lHWZMXwokmu0p9X7B078E-ZxvSwXy51ySfmJbeB2jD5Q7IW/exec', 'Reports')" class="nav-link-sidebar">
-            <span><i class="fas fa-chart-bar"></i> <span class="txt-reports">التقارير</span></span>
-        </a>
+            <!-- رابط التقارير -->
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbx7j7bF_PaFEbYWqyWz7lHWZMXwokmu0p9X7B078E-ZxvSwXy51ySfmJbeB2jD5Q7IW/exec', 'Reports')" class="nav-link-sidebar">
+                <span class="link-content">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span class="txt-reports">التقارير</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
 
+        </div>
     </div>
 </div>
+
 <div class="hero-container">
     <div class="scene-3d animate__animated animate__zoomIn">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s"
             class="main-hero-img"
-            alt="Edrak Illustration">
+            alt="HR Illustration">
     </div>
 </div>
+
 <div class="modal fade" id="appModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-full">
         <div class="modal-content">
@@ -250,14 +383,15 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bundle.min.js"></script>
 <script>
     let currentLang = 'ar';
     const modalEl = document.getElementById('appModal');
     const modal = new bootstrap.Modal(modalEl);
     const iframe = document.getElementById('appIframe');
     const loader = document.getElementById('globalLoader');
-    // === الدالة الجديدة بـ fetch (اللي بعتها) ===
+
     function updateNotifCount() {
         fetch("https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec?action=count")
             .then(res => res.json())
@@ -273,20 +407,20 @@
                 }
             })
             .catch(err => {
-                console.error("❌ خطأ في جلب عدد الإشعارات:", err);
                 document.getElementById('notifBadge').style.display = 'none';
             });
     }
-    // تشغيل الدالة عند تحميل الصفحة + تحديث كل 30 ثانية
+
     window.addEventListener('load', () => {
         updateNotifCount();
         setInterval(updateNotifCount, 30000);
     });
-    // باقي الكود كما هو
+
     modalEl.addEventListener('hidden.bs.modal', function () {
         iframe.src = "about:blank";
         iframe.style.visibility = 'hidden';
     });
+
     function requestLocAndOpen(url, title) {
         if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(
@@ -298,6 +432,7 @@
            openInApp(url, title);
         }
     }
+
     function openInApp(url, title) {
        document.getElementById('modalTitleDisplay').innerText = title;
        loader.style.display = 'flex';
@@ -313,12 +448,14 @@
             iframe.src = finalUrl;
         }, 100);
     }
+
     iframe.onload = () => {
         if(iframe.src !== "about:blank" && iframe.src !== "") {
            loader.style.display = 'none';
            iframe.style.visibility = 'visible';
         }
     };
+
     function toggleLanguage() {
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         const html = document.getElementById('mainHtml');
@@ -326,24 +463,24 @@
        document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'EN' : 'AR';
        updateTexts(currentLang);
     }
+
     function updateTexts(l) {
         const trans = {
             ar: {
-               finger: "البصمة الذكية",finger: "البصمة الموقع الذكية", db: "بيانات الموظفين", pay: "مفردات المرتب",
+               finger: "البصمة الذكية", db: "بيانات الموظفين", pay: "مفردات المرتب",
                 vac: "الإجازات والأذونات", archive: "أرشيف ملفات الموظفين",
                renewal: "نظام التجديدات", hrLetter: "خطابات الموارد البشرية",
                 notif: "الإشعارات الحديثة", contact: "تواصل معنا",
                 guide: "معلومات تهمك ", back: "رجوع", side: "HR System",
-               loading: "جاري التحميل...", 
-               reports: "التقارير"   // ← تمت إضافته
+                loading: "جاري التحميل...", 
+                reports: "التقارير"
             },
             en: {
                finger: "Smart Fingerprint", db: "Employee Data", pay: "Payroll",
                 vac: "Vacations", archive: "HR Archive", renewal: "HR Renewal System",
                hrLetter: "HR Letter", notif: "Recent Notifications", contact: "Contact Us",
-                guide: "Information For U ", back: "Back", side: "Edrak System",
-               loading: "Loading...",
-               reports: "Reports"   // ← تمت إضافته
+                guide: "Information For U", back: "Back", side: "HR System", reports: "Reports",
+                loading: "Loading...",
             }
         };
         document.querySelectorAll('.txt-finger')[0].innerText = trans[l].finger;
@@ -357,15 +494,15 @@
         document.querySelectorAll('.txt-contact')[0].innerText = trans[l].contact;
         document.querySelectorAll('.txt-guide')[0].innerText = trans[l].guide;
         
-        // تحديث نص التقارير
         const reportsTxt = document.querySelectorAll('.txt-reports');
         if(reportsTxt.length > 0) reportsTxt[0].innerText = trans[l].reports;
 
         document.getElementById('backTxt').innerText = trans[l].back;
         document.getElementById('sideTitle').innerText = trans[l].side;
         document.getElementById('loadingTxt').innerText = trans[l].loading;
-        document.querySelector('.txt-hr-desc').innerText = trans[l].hr || "Edrak HR System";
+        document.querySelector('.txt-hr-desc').innerText = l === 'ar' ? "نظام إدارة الموارد البشرية" : "HR HR System";
     }
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
