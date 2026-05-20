@@ -88,14 +88,8 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             border: 1px solid rgba(0, 0, 0, 0.01);
         }
-    
-        .nav-link-sidebar .link-content {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
 
-        .nav-link-sidebar i {
+        .nav-link-sidebar i.nav-icon {
             color: var(--HR-blue);
             width: 36px;
             height: 36px;
@@ -106,14 +100,18 @@
             justify-content: center;
             font-size: 1.1rem;
             transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        html[dir="ltr"] .nav-link-sidebar i.nav-icon {
+            margin-left: 0;
+            margin-right: 10px;
         }
         
         .nav-link-sidebar .arrow-icon {
             font-size: 0.8rem;
             color: #94A3B8;
             transition: transform 0.3s ease;
-            background: none !important;
-            width: auto; height: auto;
         }
 
         /* حركات التمرير والضغط المؤثرة */
@@ -124,7 +122,7 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.05);
             border-color: rgba(243, 112, 33, 0.2);
         }
-        .nav-link-sidebar:hover i {
+        .nav-link-sidebar:hover i.nav-icon {
             background: rgba(243, 112, 33, 0.1);
             color: var(--HR-orange);
             transform: scale(1.05);
@@ -143,14 +141,18 @@
             color: white;
             font-weight: bold;
             font-size: 12px;
-            min-width: 20px;
-            height: 20px;
+            min-width: 24px;
+            height: 24px;
             display: none;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(227, 29, 43, 0.4);
-            padding: 0 4px;
+            margin-left: 10px;
+        }
+        html[dir="ltr"] .notification-badge {
+            margin-left: 0;
+            margin-right: 10px;
         }
         
         .hero-container {
@@ -260,56 +262,56 @@
         <div class="nav-links-wrapper">
             
             <a href="#" onclick="requestLocAndOpen('https://script.google.com/macros/s/AKfycbw0bOHL31qZ57HCUARa9sLYHKjXo7ZGTv83V2E-d5rm9HZpaWnyszKvkdNElrarSfNXWw/exec', 'Fingerprint location')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-fingerprint"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-fingerprint nav-icon"></i> 
                     <span class="txt-finger">البصمة</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycby3sRnDovvRif0P6UaJC0Te7AqrJFxh37nfqKsv3I_fDFIgx8Eb_WLmwn6G615g5kjCKg/exec', 'Employee Data')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-users-cog"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-users-cog nav-icon"></i> 
                     <span class="txt-db">بيانات الموظفين</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzcnRfDxxMp1roSLLlj7dCJsgblAsOJ7xm5Lxc171r5OvSzP5Z6AJtIl5rr34MjJ6I/exec', 'Payroll')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-file-invoice-dollar"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-file-invoice-dollar nav-icon"></i> 
                     <span class="txt-payroll">مفردات المرتب</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyE_qmb02Dno6p2XkaIk4hr8bIwIJcjrolwqojIFJlxxYifAJVpuXU3NMowbbGKIyUL2A/exec', 'Vacations')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-calendar-alt"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-calendar-alt nav-icon"></i> 
                     <span class="txt-vacation">الإجازات والأذونات</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyxdopBn-GEnTJPdFKbgyrZGTHPDxNM2dao7emfUbQqF5YoMDh70y6hEKBbIcw-iytz/exec', 'HR Archive')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-archive"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-archive nav-icon"></i> 
                     <span class="txt-archive">أرشيف ملفات الموظفين</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwCXvhns4jdblvOZs2SuhXQ8tIEKvdRGpFHB7rnx_afvjHoOPMWebLTYY6Eyuqj1Vrn/exec', 'HR Renewal System')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-sync-alt"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-sync-alt nav-icon"></i> 
                     <span class="txt-renewal">نظام التجديدات</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzxTPbIadUCrPPIayD7L5X_4VHg_5JiX71IKXgjctiE8CRVuKqBHM2sjOaCbU68tSMiAA/exec', 'HR Letter')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-file-signature"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-file-signature nav-icon"></i> 
                     <span class="txt-hr-letter">خطابات الموارد البشرية</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
@@ -317,27 +319,27 @@
                   
             <!-- رابط الإشعارات -->
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec', 'Notifications')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-bell"></i>
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-bell nav-icon"></i>
                     <span class="txt-notif">الإشعارات الحديثة</span>
                 </span>
-                <span class="d-flex align-items-center gap-2">
+                <span class="d-flex align-items-center">
                     <span id="notifBadge" class="notification-badge">0</span>
                     <i class="fas fa-chevron-left arrow-icon"></i>
                 </span>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzjop_c-iMQUaT5VFcZvr8YIYn2YCBp1xqItNSahOAhLw0zXHNEuCMIGXEPB6rm83JaBw/exec', 'Contact')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-comments"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-comments nav-icon"></i> 
                     <span class="txt-contact">تواصل معنا ( اقتراح / شكوي )</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
             
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwLJtBzKsVmANy-yM6ZnRmZqQbuG2boMVxWgFaHZbAJt3H6c7YStUBPpnRVfnlN1KNV/exec', 'Information ')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-info-circle"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-chart-bar nav-icon"></i> 
                     <span class="txt-guide">معلومات تهمك</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
@@ -345,8 +347,8 @@
 
             <!-- رابط التقارير -->
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbx7j7bF_PaFEbYWqyWz7lHWZMXwokmu0p9X7B078E-ZxvSwXy51ySfmJbeB2jD5Q7IW/exec', 'Reports')" class="nav-link-sidebar">
-                <span class="link-content">
-                    <i class="fas fa-chart-bar"></i> 
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-chart-bar nav-icon"></i> 
                     <span class="txt-reports">التقارير</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
@@ -384,7 +386,7 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let currentLang = 'ar';
     const modalEl = document.getElementById('appModal');
@@ -407,6 +409,7 @@
                 }
             })
             .catch(err => {
+                console.error("❌ خطأ في جلب عدد الإشعارات:", err);
                 document.getElementById('notifBadge').style.display = 'none';
             });
     }
@@ -479,13 +482,14 @@
                finger: "Smart Fingerprint", db: "Employee Data", pay: "Payroll",
                 vac: "Vacations", archive: "HR Archive", renewal: "HR Renewal System",
                hrLetter: "HR Letter", notif: "Recent Notifications", contact: "Contact Us",
-                guide: "Information For U", back: "Back", side: "HR System", reports: "Reports",
+                guide: "Information For U ", back: "Back", side: "HR System",
                 loading: "Loading...",
+                reports: "Reports"
             }
         };
         document.querySelectorAll('.txt-finger')[0].innerText = trans[l].finger;
         document.querySelectorAll('.txt-db')[0].innerText = trans[l].db;
-        document.querySelectorAll('.txt-payroll')[0].innerText = trans[l].pay;
+        document.querySelectorAll('.txt-payroll')[0].innerText = trans[l].payroll || trans[l].pay;
         document.querySelectorAll('.txt-vacation')[0].innerText = trans[l].vac;
         document.querySelectorAll('.txt-archive')[0].innerText = trans[l].archive;
         document.querySelectorAll('.txt-renewal')[0].innerText = trans[l].renewal;
@@ -500,7 +504,7 @@
         document.getElementById('backTxt').innerText = trans[l].back;
         document.getElementById('sideTitle').innerText = trans[l].side;
         document.getElementById('loadingTxt').innerText = trans[l].loading;
-        document.querySelector('.txt-hr-desc').innerText = l === 'ar' ? "نظام إدارة الموارد البشرية" : "HR HR System";
+        document.querySelector('.txt-hr-desc').innerText = l === 'ar' ? "نظام إدارة الموارد البشرية" : "HR System";
     }
 
     if ('serviceWorker' in navigator) {
