@@ -31,15 +31,12 @@
             padding: 12px 5%;
             position: sticky; top: 0; z-index: 1000;
         }
-        
-        /* تصميم الـ Offcanvas كـ تطبيق موبايل */
         .offcanvas { 
             width: 320px !important; 
             border: none; 
             box-shadow: 10px 0 30px rgba(0,0,0,0.08); 
             background-color: var(--sidebar-bg) !important;
         }
-        
         .sidebar-header {
             background: linear-gradient(135deg, var(--HR-blue) 0%, #102244 100%);
             color: white;
@@ -64,15 +61,12 @@
             opacity: 1;
             transform: rotate(90deg);
         }
-    
-        /* تنسيق الروابط كأنها كروت داخل تطبيق */
         .nav-links-wrapper {
             padding: 20px 16px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-
         .nav-link-sidebar {
             padding: 14px 18px;
             color: var(--text-dark);
@@ -88,7 +82,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             border: 1px solid rgba(0, 0, 0, 0.01);
         }
-
         .nav-link-sidebar i.nav-icon {
             color: var(--HR-blue);
             width: 36px;
@@ -102,19 +95,15 @@
             transition: all 0.3s ease;
             margin-left: 10px;
         }
-        
         html[dir="ltr"] .nav-link-sidebar i.nav-icon {
             margin-left: 0;
             margin-right: 10px;
         }
-        
         .nav-link-sidebar .arrow-icon {
             font-size: 0.8rem;
             color: #94A3B8;
             transition: transform 0.3s ease;
         }
-
-        /* حركات التمرير والضغط المؤثرة */
         .nav-link-sidebar:hover {
             background: white;
             color: var(--HR-orange);
@@ -134,8 +123,6 @@
         html[dir="ltr"] .nav-link-sidebar:hover .arrow-icon {
             transform: translateX(4px);
         }
-
-        /* الرقم الأحمر الدائري للإشعارات */
         .notification-badge {
             background-color: var(--HR-red);
             color: white;
@@ -154,7 +141,6 @@
             margin-left: 0;
             margin-right: 10px;
         }
-        
         .hero-container {
             height: calc(100vh - 80px);
             display: flex;
@@ -165,7 +151,6 @@
             background: white;
             overflow: hidden;
         }
-    
         .scene-3d {
             width: 80%;
             max-width: 450px;
@@ -190,7 +175,6 @@
         }
         .modal-full { max-width: 100%; margin: 0; height: 100%; }
         .modal-content { height: 100vh; border: none; border-radius: 0; overflow: hidden; position: relative; background-color: white;}
-    
         .back-nav-bar {
            background: white;
             padding: 12px 25px;
@@ -199,7 +183,6 @@
             justify-content: space-between;
             border-bottom: 2px solid #eee;
         }
-    
        .modal-title-text { color: var(--HR-blue); font-weight: bold; }
        .btn-back-style {
            background: var(--HR-blue);
@@ -216,7 +199,6 @@
         }
        .btn-back-style:hover { background: var(--HR-red); }
         #globalLoader { position: absolute; top: 65px; left: 0; right: 0; bottom: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1200; }
-      
         .loader-visual {
             width: 50px; height: 50px;
             border: 4px solid #f3f3f3;
@@ -225,10 +207,8 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      
         #loadingTxt { color: var(--HR-blue); }
         iframe { width: 100%; height: calc(100vh - 65px); border: none; display: block; visibility: hidden; }
-    
         .lang-toggle {
             cursor: pointer;
             padding: 6px 18px;
@@ -265,6 +245,15 @@
                 <span class="d-flex align-items-center">
                     <i class="fas fa-fingerprint nav-icon"></i> 
                     <span class="txt-finger">البصمة</span>
+                </span>
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </a>
+            
+            <!-- سجّل شفتك اليومي -->
+            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwrZTinTNc3UzgYlQ-nUQ-Y-ZatKK2e3m167Ov_K1lYA1HoRuyou-dfNYBxgzCLcaVDdQ/exec', 'Set Your Shift')" class="nav-link-sidebar">
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-business-time nav-icon"></i>
+                    <span class="txt-shift">سجّل شفتك اليومي</span>
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
@@ -316,7 +305,7 @@
                 </span>
                 <i class="fas fa-chevron-left arrow-icon"></i>
             </a>
-                  
+
             <!-- رابط الإشعارات -->
             <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec', 'Notifications')" class="nav-link-sidebar">
                 <span class="d-flex align-items-center">
@@ -400,7 +389,6 @@
             .then(data => {
                 const badge = document.getElementById('notifBadge');
                 const count = parseInt(data.count) || 0;
-                console.log("📊 عدد الإشعارات:", count);
                 if (count > 0) {
                     badge.innerText = count;
                     badge.style.display = 'flex';
@@ -409,7 +397,6 @@
                 }
             })
             .catch(err => {
-                console.error("❌ خطأ في جلب عدد الإشعارات:", err);
                 document.getElementById('notifBadge').style.display = 'none';
             });
     }
@@ -473,6 +460,7 @@
                finger: "البصمة الذكية", db: "بيانات الموظفين", pay: "مفردات المرتب",
                 vac: "الإجازات والأذونات", archive: "أرشيف ملفات الموظفين",
                renewal: "نظام التجديدات", hrLetter: "خطابات الموارد البشرية",
+                shift: "سجّل شفتك اليومي",
                 notif: "الإشعارات الحديثة", contact: "تواصل معنا",
                 guide: "معلومات تهمك ", back: "رجوع", side: "HR System",
                 loading: "جاري التحميل...", 
@@ -481,7 +469,9 @@
             en: {
                finger: "Smart Fingerprint", db: "Employee Data", pay: "Payroll",
                 vac: "Vacations", archive: "HR Archive", renewal: "HR Renewal System",
-               hrLetter: "HR Letter", notif: "Recent Notifications", contact: "Contact Us",
+               hrLetter: "HR Letter",
+                shift: "Set Your Shift",
+                notif: "Recent Notifications", contact: "Contact Us",
                 guide: "Information For U ", back: "Back", side: "HR System",
                 loading: "Loading...",
                 reports: "Reports"
@@ -494,6 +484,7 @@
         document.querySelectorAll('.txt-archive')[0].innerText = trans[l].archive;
         document.querySelectorAll('.txt-renewal')[0].innerText = trans[l].renewal;
         document.querySelectorAll('.txt-hr-letter')[0].innerText = trans[l].hrLetter;
+        document.querySelectorAll('.txt-shift')[0].innerText = trans[l].shift;
         document.querySelectorAll('.txt-notif')[0].innerText = trans[l].notif;
         document.querySelectorAll('.txt-contact')[0].innerText = trans[l].contact;
         document.querySelectorAll('.txt-guide')[0].innerText = trans[l].guide;
