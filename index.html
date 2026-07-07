@@ -11,31 +11,146 @@
     <link rel="apple-touch-icon" href="icon.png">
     <style>
         :root {
-           --HR-blue: #1A3668;
-           --HR-red: #E31D2B;
-           --HR-orange: #F37021;
+            --HR-blue: #1A3668;
+            --HR-blue-contrast: #1A3668;
+            --HR-red: #E31D2B;
+            --HR-orange: #F37021;
             --soft-bg: #F8FAFC;
             --text-dark: #1E293B;
             --sidebar-bg: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --muted-text: #64748B;
+            --icon-bg: rgba(26,54,104,0.06);
         }
+        html[data-theme="dark"] {
+            --soft-bg: #0B1220;
+            --text-dark: #E7ECF3;
+            --sidebar-bg: #111C2E;
+            --card-bg: #16213A;
+            --border-color: rgba(255,255,255,0.08);
+            --shadow-color: rgba(0,0,0,0.55);
+            --muted-text: #94A3B8;
+            --HR-blue-contrast: #6C93D6;
+            --icon-bg: rgba(108,147,214,0.16);
+        }
+        * { box-sizing: border-box; }
         body {
-           background-color: var(--soft-bg);
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--soft-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0; padding: 0; overflow-x: hidden;
-            height: 100vh;
+            min-height: 100vh;
             color: var(--text-dark);
+            transition: background-color .35s ease, color .35s ease;
         }
         .navbar {
-           background: white;
-           box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            background: var(--card-bg);
+            box-shadow: 0 4px 20px var(--shadow-color);
             padding: 12px 5%;
             position: sticky; top: 0; z-index: 1000;
+            transition: background-color .35s ease;
         }
-        .offcanvas { 
-            width: 320px !important; 
-            border: none; 
-            box-shadow: 10px 0 30px rgba(0,0,0,0.08); 
+        .navbar-brand-text { font-weight: 700; color: var(--text-dark); font-size: 1.05rem; }
+        .icon-btn-nav {
+            cursor: pointer;
+            width: 40px; height: 40px;
+            border: none; background: transparent;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .theme-toggle, .lang-toggle {
+            cursor: pointer;
+            padding: 8px 16px;
+            border: 2px solid var(--HR-blue-contrast);
+            border-radius: 25px;
+            color: var(--HR-blue-contrast);
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .theme-toggle { width: 42px; height: 42px; padding: 0; }
+        .theme-toggle:hover, .lang-toggle:hover { background: var(--HR-blue-contrast); color: white; }
+
+        /* ===== Selection Screen ===== */
+        .selection-screen {
+            min-height: calc(100vh - 80px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 50px 20px; gap: 44px;
+        }
+        .selection-eyebrow {
+            display: inline-block; padding: 6px 18px; border-radius: 20px;
+            background: var(--icon-bg); color: var(--HR-blue-contrast);
+            font-weight: 700; font-size: 0.78rem; letter-spacing: .5px; margin-bottom: 16px;
+        }
+        .selection-hero { text-align: center; max-width: 620px; }
+        .selection-hero img { height: 56px; margin-bottom: 18px; border-radius: 12px; }
+        .selection-hero h1 { font-size: 2.15rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
+        .selection-hero p { color: var(--muted-text); font-size: 1.02rem; margin: 0; }
+        .portal-cards { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; }
+        .portal-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px 30px 32px;
+            width: 300px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: all .35s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .portal-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(90deg, var(--HR-blue-contrast), var(--HR-orange));
+            transform: scaleX(0); transition: transform .35s ease;
+        }
+        .portal-card.admin-card::before { background: linear-gradient(90deg, var(--HR-orange), var(--HR-red)); }
+        .portal-card:hover::before { transform: scaleX(1); }
+        .portal-card:hover { transform: translateY(-8px); box-shadow: 0 20px 45px var(--shadow-color); }
+        .portal-icon-wrap {
+            width: 84px; height: 84px; border-radius: 50%;
+            background: var(--icon-bg); color: var(--HR-blue-contrast);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.1rem; margin: 0 auto 20px; transition: .35s;
+        }
+        .portal-card.admin-card .portal-icon-wrap { background: rgba(243,112,33,0.14); color: var(--HR-orange); }
+        .portal-card:hover .portal-icon-wrap { transform: scale(1.08) rotate(-4deg); }
+        .portal-card-title { font-size: 1.32rem; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .portal-card-desc { color: var(--muted-text); font-size: 0.9rem; margin-bottom: 18px; min-height: 42px; line-height: 1.5; }
+        .portal-chip-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 22px; }
+        .portal-chip {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: var(--soft-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--muted-text); font-size: 0.82rem; border: 1px solid var(--border-color);
+        }
+        .portal-card-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--HR-blue-contrast); }
+        .portal-card.admin-card .portal-card-cta { color: var(--HR-orange); }
+        .portal-card-cta i { transition: transform .3s ease; }
+        html[dir="rtl"] .portal-card:hover .portal-card-cta i { transform: translateX(-4px); }
+        html[dir="ltr"] .portal-card:hover .portal-card-cta i { transform: translateX(4px); }
+
+        /* ===== Dashboard ===== */
+        .dashboard-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 5%; flex-wrap: wrap; gap: 12px;
+        }
+        .dashboard-welcome { font-weight: 700; color: var(--text-dark); font-size: 1.05rem; }
+        .dashboard-welcome span { color: var(--HR-blue-contrast); }
+        .switch-portal-btn {
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 20px; border-radius: 25px; font-weight: 700; font-size: 0.85rem;
+            background: var(--icon-bg); color: var(--HR-blue-contrast); border: none; transition: .3s;
+        }
+        .switch-portal-btn:hover { background: var(--HR-blue-contrast); color: white; }
+
+        .offcanvas {
+            width: 320px !important;
+            border: none;
+            box-shadow: 10px 0 30px var(--shadow-color);
             background-color: var(--sidebar-bg) !important;
+            color: var(--text-dark);
         }
         .sidebar-header {
             background: linear-gradient(135deg, var(--HR-blue) 0%, #102244 100%);
@@ -47,311 +162,180 @@
             box-shadow: 0 4px 15px rgba(26, 54, 104, 0.2);
         }
         .sidebar-header .btn-close-white {
-            position: absolute;
-            top: 25px;
-            left: 20px;
-            opacity: 0.8;
-            transition: 0.3s;
+            position: absolute; top: 25px; left: 20px; opacity: 0.8; transition: 0.3s;
         }
-        html[dir="ltr"] .sidebar-header .btn-close-white {
-            left: auto;
-            right: 20px;
-        }
-        .sidebar-header .btn-close-white:hover {
-            opacity: 1;
-            transform: rotate(90deg);
-        }
-        .nav-links-wrapper {
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        html[dir="ltr"] .sidebar-header .btn-close-white { left: auto; right: 20px; }
+        .sidebar-header .btn-close-white:hover { opacity: 1; transform: rotate(90deg); }
+        .nav-links-wrapper { padding: 20px 16px 10px; display: flex; flex-direction: column; gap: 10px; }
         .nav-link-sidebar {
             padding: 14px 18px;
             color: var(--text-dark);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card-bg);
             border-radius: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 600;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-            border: 1px solid rgba(0, 0, 0, 0.01);
+            font-weight: 600; font-size: 0.95rem;
+            box-shadow: 0 2px 6px var(--shadow-color);
+            border: 1px solid var(--border-color);
         }
         .nav-link-sidebar i.nav-icon {
-            color: var(--HR-blue);
-            width: 36px;
-            height: 36px;
-            background: rgba(26, 54, 104, 0.06);
+            color: var(--HR-blue-contrast);
+            width: 36px; height: 36px;
+            background: var(--icon-bg);
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            margin-left: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: all 0.3s ease; margin-left: 10px;
         }
-        html[dir="ltr"] .nav-link-sidebar i.nav-icon {
-            margin-left: 0;
-            margin-right: 10px;
+        html[dir="ltr"] .nav-link-sidebar i.nav-icon { margin-left: 0; margin-right: 10px; }
+        .nav-link-sidebar .arrow-icon { font-size: 0.8rem; color: #94A3B8; transition: transform 0.3s ease; }
+        .nav-link-sidebar:hover { color: var(--HR-orange); transform: translateY(-2px); box-shadow: 0 6px 15px var(--shadow-color); border-color: rgba(243, 112, 33, 0.3); }
+        .nav-link-sidebar:hover i.nav-icon { background: rgba(243, 112, 33, 0.14); color: var(--HR-orange); transform: scale(1.05); }
+        .nav-link-sidebar:hover .arrow-icon { color: var(--HR-orange); transform: translateX(-4px); }
+        html[dir="ltr"] .nav-link-sidebar:hover .arrow-icon { transform: translateX(4px); }
+        .sidebar-footer { padding: 6px 16px 20px; }
+        .switch-portal-link {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 13px; border-radius: 12px; cursor: pointer;
+            border: 2px dashed var(--border-color); color: var(--muted-text);
+            font-weight: 700; font-size: 0.88rem; transition: .3s;
         }
-        .nav-link-sidebar .arrow-icon {
-            font-size: 0.8rem;
-            color: #94A3B8;
-            transition: transform 0.3s ease;
-        }
-        .nav-link-sidebar:hover {
-            background: white;
-            color: var(--HR-orange);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-            border-color: rgba(243, 112, 33, 0.2);
-        }
-        .nav-link-sidebar:hover i.nav-icon {
-            background: rgba(243, 112, 33, 0.1);
-            color: var(--HR-orange);
-            transform: scale(1.05);
-        }
-        .nav-link-sidebar:hover .arrow-icon {
-            color: var(--HR-orange);
-            transform: translateX(-4px);
-        }
-        html[dir="ltr"] .nav-link-sidebar:hover .arrow-icon {
-            transform: translateX(4px);
-        }
+        .switch-portal-link:hover { border-color: var(--HR-orange); color: var(--HR-orange); }
         .notification-badge {
-            background-color: var(--HR-red);
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            min-width: 24px;
-            height: 24px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(227, 29, 43, 0.4);
-            margin-left: 10px;
+            background-color: var(--HR-red); color: white; font-weight: bold; font-size: 12px;
+            min-width: 24px; height: 24px; display: none; align-items: center; justify-content: center;
+            border-radius: 50%; box-shadow: 0 2px 8px rgba(227, 29, 43, 0.4); margin-left: 10px;
         }
-        html[dir="ltr"] .notification-badge {
-            margin-left: 0;
-            margin-right: 10px;
-        }
+        html[dir="ltr"] .notification-badge { margin-left: 0; margin-right: 10px; }
+
         .hero-container {
-            height: calc(100vh - 80px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1000px;
-            padding: 20px;
-            background: white;
-            overflow: hidden;
+            min-height: calc(100vh - 140px);
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px; padding: 20px;
         }
         .scene-3d {
-            width: 80%;
-            max-width: 450px;
-            transform-style: preserve-3d;
-            transition: all 0.6s ease;
-            transform: rotateX(5deg) rotateY(-5deg);
+            width: 80%; max-width: 420px; transform-style: preserve-3d;
+            transition: all 0.6s ease; transform: rotateX(5deg) rotateY(-5deg);
         }
         @media (max-width: 768px) {
-            .scene-3d {
-                width: 70%;
-                max-width: 250px;
-                transform: rotateX(0deg) rotateY(0deg);
-            }
+            .scene-3d { width: 65%; max-width: 230px; transform: rotateX(0deg) rotateY(0deg); }
+            .portal-card { width: 100%; max-width: 340px; }
         }
         .main-hero-img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            border: 5px solid white;
+            width: 100%; height: auto; object-fit: contain; border-radius: 20px;
+            box-shadow: 0 15px 35px var(--shadow-color); border: 5px solid var(--card-bg);
         }
         .modal-full { max-width: 100%; margin: 0; height: 100%; }
-        .modal-content { height: 100vh; border: none; border-radius: 0; overflow: hidden; position: relative; background-color: white;}
+        .modal-content { height: 100vh; border: none; border-radius: 0; overflow: hidden; position: relative; background-color: var(--card-bg); }
         .back-nav-bar {
-           background: white;
+            background: var(--card-bg);
             padding: 12px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 2px solid var(--border-color);
         }
-       .modal-title-text { color: var(--HR-blue); font-weight: bold; }
-       .btn-back-style {
-           background: var(--HR-blue);
-            color: white;
-            border: none;
-            padding: 8px 25px;
-           border-radius: 50px;
-           font-weight: bold;
-            display: flex;
-           align-items: center;
-            gap: 10px;
-            cursor: pointer;
-           transition: 0.3s;
+        .modal-title-text { color: var(--HR-blue-contrast); font-weight: bold; }
+        .btn-back-style {
+            background: var(--HR-blue);
+            color: white; border: none; padding: 8px 25px;
+            border-radius: 50px; font-weight: bold;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: 0.3s;
         }
-       .btn-back-style:hover { background: var(--HR-red); }
-        #globalLoader { position: absolute; top: 65px; left: 0; right: 0; bottom: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1200; }
+        .btn-back-style:hover { background: var(--HR-red); }
+        #globalLoader { position: absolute; top: 65px; left: 0; right: 0; bottom: 0; background: var(--card-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1200; }
         .loader-visual {
-            width: 50px; height: 50px;
-            border: 4px solid #f3f3f3;
-           border-top: 4px solid var(--HR-orange);
-           border-radius: 50%;
+            width: 50px; height: 50px; border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--HR-orange); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loadingTxt { color: var(--HR-blue); }
+        #loadingTxt { color: var(--HR-blue-contrast); }
         iframe { width: 100%; height: calc(100vh - 65px); border: none; display: block; visibility: hidden; }
-        .lang-toggle {
-            cursor: pointer;
-            padding: 6px 18px;
-            border: 2px solid var(--HR-blue);
-           border-radius: 25px;
-            color: var(--HR-blue);
-           font-weight: bold;
-           transition: 0.3s;
-        }
-       .lang-toggle:hover { background: var(--HR-blue); color: white; }
     </style>
 </head>
 <body>
 <nav class="navbar d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-        <button class="btn p-0 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-            <i class="fas fa-bars fa-2x" style="color: var(--HR-blue);"></i>
-       </button>
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s" height="40" alt="Logo">
+        <button class="icon-btn-nav" id="hamburgerBtn" style="display:none;" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+            <i class="fas fa-bars fa-2x" style="color: var(--HR-blue-contrast);"></i>
+        </button>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s" height="38" alt="Logo" style="border-radius:8px;">
+        <span class="navbar-brand-text d-none d-sm-inline">HR System</span>
     </div>
-    <div class="lang-toggle" onclick="toggleLanguage()" id="langBtn">EN</div>
+    <div class="d-flex align-items-center gap-2">
+        <div class="theme-toggle" onclick="toggleTheme()" title="ليلي / نهاري">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </div>
+        <div class="lang-toggle" onclick="toggleLanguage()" id="langBtn">EN</div>
+    </div>
 </nav>
+
+<!-- ===== Portal Selection Screen ===== -->
+<div class="selection-screen" id="selectionScreen">
+    <div class="selection-hero animate__animated animate__fadeInDown">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s" alt="Logo">
+        <div class="selection-eyebrow" id="selEyebrow">نظام الموارد البشرية</div>
+        <h1 id="selTitle">أهلاً بك</h1>
+        <p id="selSubtitle">اختر البوابة المناسبة لك للمتابعة</p>
+    </div>
+    <div class="portal-cards">
+        <div class="portal-card animate__animated animate__fadeInUp" onclick="selectPortal('employee')">
+            <div class="portal-icon-wrap"><i class="fas fa-id-badge"></i></div>
+            <h3 class="portal-card-title" id="empPortalTitle">بوابة الموظف</h3>
+            <p class="portal-card-desc" id="empPortalDesc">البصمة، الشفتات، بياناتك ومرتبك في مكان واحد</p>
+            <div class="portal-chip-row">
+                <span class="portal-chip"><i class="fas fa-fingerprint"></i></span>
+                <span class="portal-chip"><i class="fas fa-calendar-alt"></i></span>
+                <span class="portal-chip"><i class="fas fa-file-invoice-dollar"></i></span>
+                <span class="portal-chip"><i class="fas fa-bell"></i></span>
+            </div>
+            <span class="portal-card-cta"><span id="empEnterTxt">دخول</span> <i class="fas fa-arrow-left"></i></span>
+        </div>
+        <div class="portal-card admin-card animate__animated animate__fadeInUp" style="animation-delay:.1s" onclick="selectPortal('admin')">
+            <div class="portal-icon-wrap"><i class="fas fa-user-tie"></i></div>
+            <h3 class="portal-card-title" id="adminPortalTitle">بوابة الإدارة</h3>
+            <p class="portal-card-desc" id="adminPortalDesc">إدارة شؤون الموظفين والأرشيف والتقارير</p>
+            <div class="portal-chip-row">
+                <span class="portal-chip"><i class="fas fa-users-cog"></i></span>
+                <span class="portal-chip"><i class="fas fa-archive"></i></span>
+                <span class="portal-chip"><i class="fas fa-sync-alt"></i></span>
+                <span class="portal-chip"><i class="fas fa-chart-line"></i></span>
+            </div>
+            <span class="portal-card-cta"><span id="adminEnterTxt">دخول</span> <i class="fas fa-arrow-left"></i></span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Dashboard (shown after choosing a portal) ===== -->
+<div id="portalDashboard" style="display:none;">
+    <div class="dashboard-topbar">
+        <div class="dashboard-welcome"><span id="dashPortalName">بوابة الموظف</span></div>
+        <button class="switch-portal-btn" onclick="goToSelection()">
+            <i class="fas fa-right-left"></i> <span id="switchPortalTxt">تبديل البوابة</span>
+        </button>
+    </div>
+    <div class="hero-container">
+        <div class="scene-3d animate__animated animate__zoomIn">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s"
+                class="main-hero-img"
+                alt="HR Illustration">
+        </div>
+    </div>
+</div>
 
 <div class="offcanvas offcanvas-start" id="sidebarMenu">
     <div class="sidebar-header">
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <h4 id="sideTitle" class="fw-bold mb-1">HR System</h4>
-        <p class="small mb-0 opacity-75 txt-hr-desc">HR System Portal</p>
+        <p class="small mb-0 opacity-75" id="sideDesc">بوابة الموظف</p>
     </div>
-    <div class="offcanvas-body p-0">
-        <div class="nav-links-wrapper">
-            
-            <a href="#" onclick="requestLocAndOpen('https://script.google.com/macros/s/AKfycbxeSZgc0l1yfkLl8XfpiB_HsMeqFRgjUgbjX7dVIcyx-zTCvRNY3TL6RgkagEuDhsa6/exec', 'Fingerprint location')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-fingerprint nav-icon"></i> 
-                    <span class="txt-finger">  البصمة </span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <!-- سجّل شفتك اليومي -->
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwe_cUSsu29F6EjDzE1fjD5b5Zv_Rvqnav-PMTNTa3CwUzRnPoEUCVGCyvDpQSlPIbZnQ/exec', 'Set Your Shift')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-business-time nav-icon"></i>
-                    <span class="txt-shift">سجّل شفتك اليومي</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbzGpmP4SeQDtR6qHHolga-TU85YbKRsGenwwK4weQ0-8qptyALIAz_ZsU2F4Jc4kLAITw/exec', 'Employee Data')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-users-cog nav-icon"></i> 
-                    <span class="txt-db">بيانات الموظفين</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbx3BTvOg4-lM7HcvQiHFn5VYK8zBwKTx3LaX6Q6-LTFP4LErtwAc_LWVHl1HdpoXQE/exec', 'Payroll')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-file-invoice-dollar nav-icon"></i> 
-                    <span class="txt-payroll">مفردات المرتب</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbz4B5LIHRlrv-hLRV0kF0beHWfZBHYFE279FGhY4jIq54THkp9mysGkWHZJoNdIV73Z0g/exec', 'Vacations')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-calendar-alt nav-icon"></i> 
-                    <span class="txt-vacation">الإجازات والأذونات</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyxdopBn-GEnTJPdFKbgyrZGTHPDxNM2dao7emfUbQqF5YoMDh70y6hEKBbIcw-iytz/exec', 'HR Archive')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-archive nav-icon"></i> 
-                    <span class="txt-archive">أرشيف ملفات الموظفين</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwCXvhns4jdblvOZs2SuhXQ8tIEKvdRGpFHB7rnx_afvjHoOPMWebLTYY6Eyuqj1Vrn/exec', 'HR Renewal System')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-sync-alt nav-icon"></i> 
-                    <span class="txt-renewal">نظام التجديدات</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbyPSK6nA70ohYcrBO_MfEjKU5DI3pHGRcQaaLCtK2ZP2ntxaGNGxbP8PYXmeZGg5zkj/exec', 'HR Letter')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-file-signature nav-icon"></i> 
-                    <span class="txt-hr-letter">خطابات الموارد البشرية</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-
-            <!-- رابط الإشعارات -->
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec', 'Notifications')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-bell nav-icon"></i>
-                    <span class="txt-notif">الإشعارات الحديثة</span>
-                </span>
-                <span class="d-flex align-items-center">
-                    <span id="notifBadge" class="notification-badge">0</span>
-                    <i class="fas fa-chevron-left arrow-icon"></i>
-                </span>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbw8fgDgi_6VMunUb8jmtB8HykRFv6QbuEVY8J8HarjlR6rti3pmEUxX1hGGvTQydFXi/exec', 'Contact')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-comments nav-icon"></i> 
-                    <span class="txt-contact">تواصل معنا ( اقتراح / شكوي )</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-            
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbwLJtBzKsVmANy-yM6ZnRmZqQbuG2boMVxWgFaHZbAJt3H6c7YStUBPpnRVfnlN1KNV/exec', 'Information ')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-chart-bar nav-icon"></i> 
-                    <span class="txt-guide">معلومات تهمك</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-
-            <!-- رابط التقارير -->
-            <a href="#" onclick="openInApp('https://script.google.com/macros/s/AKfycbx7j7bF_PaFEbYWqyWz7lHWZMXwokmu0p9X7B078E-ZxvSwXy51ySfmJbeB2jD5Q7IW/exec', 'Reports')" class="nav-link-sidebar">
-                <span class="d-flex align-items-center">
-                    <i class="fas fa-chart-bar nav-icon"></i> 
-                    <span class="txt-reports">التقارير</span>
-                </span>
-                <i class="fas fa-chevron-left arrow-icon"></i>
-            </a>
-
+    <div class="offcanvas-body p-0 d-flex flex-column justify-content-between">
+        <div class="nav-links-wrapper" id="navLinksWrapper"></div>
+        <div class="sidebar-footer">
+            <div class="switch-portal-link" onclick="goToSelection()">
+                <i class="fas fa-right-left"></i> <span id="switchPortalTxt2">تبديل البوابة</span>
+            </div>
         </div>
-    </div>
-</div>
-
-<div class="hero-container">
-    <div class="scene-3d animate__animated animate__zoomIn">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjjAlk-kqXEaS6WivFvYQBC9A4ru90F6AgQ&s"
-            class="main-hero-img"
-            alt="HR Illustration">
     </div>
 </div>
 
@@ -363,14 +347,14 @@
                 <button type="button" class="btn-back-style" data-bs-dismiss="modal">
                     <span id="backTxt">رجوع</span> <i class="fas fa-chevron-left"></i>
                 </button>
-           </div>
+            </div>
             <div class="modal-body p-0 position-relative">
                 <div id="globalLoader">
                     <div class="loader-visual"></div>
                     <h5 id="loadingTxt" class="mt-3 fw-bold">جاري التحميل...</h5>
                 </div>
                 <iframe src="" id="appIframe" allow="geolocation"></iframe>
-           </div>
+            </div>
         </div>
     </div>
 </div>
@@ -378,33 +362,107 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let currentLang = 'ar';
+    let currentTheme = 'light';
+    let currentPortal = null; // 'employee' | 'admin'
+    let notifTimer = null;
+
     const modalEl = document.getElementById('appModal');
     const modal = new bootstrap.Modal(modalEl);
     const iframe = document.getElementById('appIframe');
     const loader = document.getElementById('globalLoader');
 
+    // ===== Link definitions =====
+    const LINKS = {
+        employee: [
+            { key: 'finger',  icon: 'fa-fingerprint',         geoloc: true,
+              url: 'https://script.google.com/macros/s/AKfycbxeSZgc0l1yfkLl8XfpiB_HsMeqFRgjUgbjX7dVIcyx-zTCvRNY3TL6RgkagEuDhsa6/exec' },
+            { key: 'shift',   icon: 'fa-business-time',
+              url: 'https://script.google.com/macros/s/AKfycbwe_cUSsu29F6EjDzE1fjD5b5Zv_Rvqnav-PMTNTa3CwUzRnPoEUCVGCyvDpQSlPIbZnQ/exec' },
+            { key: 'db',      icon: 'fa-users-cog',
+              url: 'https://script.google.com/macros/s/AKfycbzz0oJ3_sda3gYFUP_aR5i5GnbGWLedGYcVcWBrDZKBSIHUy-PNqdtJjpngxwjEBMj0cg/exec' },
+            { key: 'payroll', icon: 'fa-file-invoice-dollar',
+              url: 'https://script.google.com/macros/s/AKfycbzSvQVlzQrvd0JV3VBFhB4krkZyWplNn3KHrIOfaMzLlMYgLTk5mfEVmHYG-Xg4Vi0u/exec' },
+            { key: 'vacation',icon: 'fa-calendar-alt',
+              url: 'https://script.google.com/macros/s/AKfycbwtlExrYLdIj5u9XmF7CIjeAZqak68aaXp072fJYjLbZ1-ZMUxnrs5Kew6X3A6uBZFjDg/exec' },
+            { key: 'hrLetter',icon: 'fa-file-signature',
+              url: 'https://script.google.com/macros/s/AKfycbyPSK6nA70ohYcrBO_MfEjKU5DI3pHGRcQaaLCtK2ZP2ntxaGNGxbP8PYXmeZGg5zkj/exec' },
+            { key: 'notif',   icon: 'fa-bell', badge: true,
+              url: 'https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec' },
+            { key: 'contact', icon: 'fa-comments',
+              url: 'https://script.google.com/macros/s/AKfycbw8fgDgi_6VMunUb8jmtB8HykRFv6QbuEVY8J8HarjlR6rti3pmEUxX1hGGvTQydFXi/exec' },
+            { key: 'guide',   icon: 'fa-lightbulb',
+              url: 'https://script.google.com/macros/s/AKfycbwaWIjLwvVf-GpRyZ7UXSs4Rd5gqms-VRJTEhXakCcvWck3_c_zOfRE8D56AE1ztShm/exec' }
+        ],
+        admin: [
+            { key: 'db',      icon: 'fa-users-cog',
+              url: 'https://script.google.com/macros/s/AKfycbzz0oJ3_sda3gYFUP_aR5i5GnbGWLedGYcVcWBrDZKBSIHUy-PNqdtJjpngxwjEBMj0cg/exec?page=admin' },
+            { key: 'payroll', icon: 'fa-file-invoice-dollar',
+              url: 'https://script.google.com/macros/s/AKfycbzSvQVlzQrvd0JV3VBFhB4krkZyWplNn3KHrIOfaMzLlMYgLTk5mfEVmHYG-Xg4Vi0u/exec?page=admin' },
+            { key: 'vacation',icon: 'fa-calendar-alt',
+              url: 'https://script.google.com/macros/s/AKfycbwtlExrYLdIj5u9XmF7CIjeAZqak68aaXp072fJYjLbZ1-ZMUxnrs5Kew6X3A6uBZFjDg/exec?page=admin' },
+            { key: 'archive', icon: 'fa-archive',
+              url: 'https://script.google.com/macros/s/AKfycbyxdopBn-GEnTJPdFKbgyrZGTHPDxNM2dao7emfUbQqF5YoMDh70y6hEKBbIcw-iytz/exec' },
+            { key: 'renewal', icon: 'fa-sync-alt',
+              url: 'https://script.google.com/macros/s/AKfycbwCXvhns4jdblvOZs2SuhXQ8tIEKvdRGpFHB7rnx_afvjHoOPMWebLTYY6Eyuqj1Vrn/exec' },
+            { key: 'notif',   icon: 'fa-bell', badge: true,
+              url: 'https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec?p=admin' },
+            { key: 'guide',   icon: 'fa-lightbulb',
+              url: 'https://script.google.com/macros/s/AKfycbwaWIjLwvVf-GpRyZ7UXSs4Rd5gqms-VRJTEhXakCcvWck3_c_zOfRE8D56AE1ztShm/exec?page=admin' },
+            { key: 'reports', icon: 'fa-chart-line',
+              url: 'https://script.google.com/macros/s/AKfycbwcRfvQ8y4nYwj4oMkT9ICtmrBqpoSoTAEdBiMqpCRtUdc_w7jumlQPxS16Hmxk-cUC/exec' }
+        ]
+    };
+
+    // ===== Translations =====
+    const trans = {
+        ar: {
+            selEyebrow: 'نظام الموارد البشرية', selTitle: 'أهلاً بك', selSubtitle: 'اختر البوابة المناسبة لك للمتابعة',
+            empTitle: 'بوابة الموظف', empDesc: 'البصمة، الشفتات، بياناتك ومرتبك في مكان واحد',
+            adminTitle: 'بوابة الإدارة', adminDesc: 'إدارة شؤون الموظفين والأرشيف والتقارير',
+            enter: 'دخول', switchPortal: 'تبديل البوابة', back: 'رجوع', loading: 'جاري التحميل...',
+            sideEmployee: 'بوابة الموظف', sideAdmin: 'بوابة الإدارة',
+            items: {
+                finger: 'البصمة الذكية', shift: 'سجّل شفتك اليومي', db: 'بيانات الموظفين',
+                payroll: 'مفردات المرتب', vacation: 'الإجازات والأذونات', archive: 'أرشيف ملفات الموظفين',
+                renewal: 'نظام التجديدات', hrLetter: 'خطابات الموارد البشرية', notif: 'الإشعارات الحديثة',
+                contact: 'تواصل معنا ( اقتراح / شكوى )', guide: 'معلومات تهمك', reports: 'التقارير'
+            }
+        },
+        en: {
+            selEyebrow: 'HR System', selTitle: 'Welcome', selSubtitle: 'Choose the portal that fits you to continue',
+            empTitle: 'Employee Portal', empDesc: 'Fingerprint, shifts, your data and payroll in one place',
+            adminTitle: 'Admin Portal', adminDesc: 'Manage employee affairs, archive and reports',
+            enter: 'Enter', switchPortal: 'Switch Portal', back: 'Back', loading: 'Loading...',
+            sideEmployee: 'Employee Portal', sideAdmin: 'Admin Portal',
+            items: {
+                finger: 'Smart Fingerprint', shift: 'Set Your Shift', db: 'Employee Data',
+                payroll: 'Payroll', vacation: 'Vacations', archive: 'HR Archive',
+                renewal: 'HR Renewal System', hrLetter: 'HR Letter', notif: 'Recent Notifications',
+                contact: 'Contact Us', guide: 'Information For You', reports: 'Reports'
+            }
+        }
+    };
+
+    // ===== Notifications =====
     function updateNotifCount() {
-        fetch("https://script.google.com/macros/s/AKfycbxTCSk6HSv2JlTsLXS11hfwlwYUG5Z_ggOnYcV-o2-BG2ydOSeJIYT5swEv_sfeJVJI/exec?action=count")
+        if (!currentPortal) return;
+        const notifItem = LINKS[currentPortal].find(i => i.badge);
+        if (!notifItem) return;
+        const sep = notifItem.url.includes('?') ? '&' : '?';
+        fetch(notifItem.url + sep + 'action=count')
             .then(res => res.json())
             .then(data => {
                 const badge = document.getElementById('notifBadge');
+                if (!badge) return;
                 const count = parseInt(data.count) || 0;
-                if (count > 0) {
-                    badge.innerText = count;
-                    badge.style.display = 'flex';
-                } else {
-                    badge.style.display = 'none';
-                }
+                if (count > 0) { badge.innerText = count; badge.style.display = 'flex'; }
+                else { badge.style.display = 'none'; }
             })
-            .catch(err => {
-                document.getElementById('notifBadge').style.display = 'none';
+            .catch(() => {
+                const badge = document.getElementById('notifBadge');
+                if (badge) badge.style.display = 'none';
             });
     }
-
-    window.addEventListener('load', () => {
-        updateNotifCount();
-        setInterval(updateNotifCount, 30000);
-    });
 
     modalEl.addEventListener('hidden.bs.modal', function () {
         iframe.src = "about:blank";
@@ -413,89 +471,118 @@
 
     function requestLocAndOpen(url, title) {
         if (navigator.geolocation) {
-           navigator.geolocation.getCurrentPosition(
+            navigator.geolocation.getCurrentPosition(
                 () => { openInApp(url, title); },
                 () => { openInApp(url, title); },
                 { enableHighAccuracy: true, timeout: 5000 }
-          );
+            );
         } else {
-           openInApp(url, title);
+            openInApp(url, title);
         }
     }
 
     function openInApp(url, title) {
-       document.getElementById('modalTitleDisplay').innerText = title;
-       loader.style.display = 'flex';
-       iframe.style.visibility = 'hidden';
+        document.getElementById('modalTitleDisplay').innerText = title;
+        loader.style.display = 'flex';
+        iframe.style.visibility = 'hidden';
         const finalUrl = url + (url.includes('?') ? '&' : '?') + 'authuser=0';
         modal.show();
-    
+
         const offcanvasEl = document.getElementById('sidebarMenu');
         const openedOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
         if (openedOffcanvas) openedOffcanvas.hide();
-    
-        setTimeout(() => {
-            iframe.src = finalUrl;
-        }, 100);
+
+        setTimeout(() => { iframe.src = finalUrl; }, 100);
     }
 
     iframe.onload = () => {
-        if(iframe.src !== "about:blank" && iframe.src !== "") {
-           loader.style.display = 'none';
-           iframe.style.visibility = 'visible';
+        if (iframe.src !== "about:blank" && iframe.src !== "") {
+            loader.style.display = 'none';
+            iframe.style.visibility = 'visible';
         }
     };
 
+    // ===== Portal selection =====
+    function selectPortal(portal) {
+        currentPortal = portal;
+        document.getElementById('selectionScreen').style.display = 'none';
+        document.getElementById('portalDashboard').style.display = 'block';
+        document.getElementById('hamburgerBtn').style.display = 'inline-flex';
+        renderSidebar();
+        updateNotifCount();
+        clearInterval(notifTimer);
+        notifTimer = setInterval(updateNotifCount, 30000);
+    }
+
+    function goToSelection() {
+        currentPortal = null;
+        document.getElementById('portalDashboard').style.display = 'none';
+        document.getElementById('selectionScreen').style.display = 'flex';
+        document.getElementById('hamburgerBtn').style.display = 'none';
+        clearInterval(notifTimer);
+        const offcanvasEl = document.getElementById('sidebarMenu');
+        const openedOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+        if (openedOffcanvas) openedOffcanvas.hide();
+    }
+
+    function renderSidebar() {
+        if (!currentPortal) return;
+        const t = trans[currentLang];
+        const list = LINKS[currentPortal];
+        const wrapper = document.getElementById('navLinksWrapper');
+        wrapper.innerHTML = '';
+        list.forEach(item => {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'nav-link-sidebar';
+            a.onclick = (e) => {
+                e.preventDefault();
+                if (item.geoloc) requestLocAndOpen(item.url, t.items[item.key]);
+                else openInApp(item.url, t.items[item.key]);
+            };
+            const badgeHtml = item.badge
+                ? `<span class="d-flex align-items-center"><span id="notifBadge" class="notification-badge">0</span><i class="fas fa-chevron-left arrow-icon"></i></span>`
+                : `<i class="fas fa-chevron-left arrow-icon"></i>`;
+            a.innerHTML = `<span class="d-flex align-items-center"><i class="fas ${item.icon} nav-icon"></i><span>${t.items[item.key]}</span></span>${badgeHtml}`;
+            wrapper.appendChild(a);
+        });
+        document.getElementById('sideDesc').innerText = currentPortal === 'employee' ? t.sideEmployee : t.sideAdmin;
+        document.getElementById('dashPortalName').innerText = currentPortal === 'employee' ? t.empTitle : t.adminTitle;
+    }
+
+    // ===== Theme =====
+    function toggleTheme() {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        document.getElementById('themeIcon').className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    // ===== Language =====
     function toggleLanguage() {
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         const html = document.getElementById('mainHtml');
         html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-       document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'EN' : 'AR';
-       updateTexts(currentLang);
+        html.lang = currentLang;
+        document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'EN' : 'AR';
+        applyTranslations();
     }
 
-    function updateTexts(l) {
-        const trans = {
-            ar: {
-               finger: "البصمة الذكية", db: "بيانات الموظفين", pay: "مفردات المرتب",
-                vac: "الإجازات والأذونات", archive: "أرشيف ملفات الموظفين",
-               renewal: "نظام التجديدات", hrLetter: "خطابات الموارد البشرية",
-                shift: "سجّل شفتك اليومي",
-                notif: "الإشعارات الحديثة", contact: "تواصل معنا",
-                guide: "معلومات تهمك ", back: "رجوع", side: "HR System",
-                loading: "جاري التحميل...", 
-                reports: "التقارير"
-            },
-            en: {
-               finger: "Smart Fingerprint", db: "Employee Data", pay: "Payroll",
-                vac: "Vacations", archive: "HR Archive", renewal: "HR Renewal System",
-               hrLetter: "HR Letter",
-                shift: "Set Your Shift",
-                notif: "Recent Notifications", contact: "Contact Us",
-                guide: "Information For U ", back: "Back", side: "HR System",
-                loading: "Loading...",
-                reports: "Reports"
-            }
-        };
-        document.querySelectorAll('.txt-finger')[0].innerText = trans[l].finger;
-        document.querySelectorAll('.txt-db')[0].innerText = trans[l].db;
-        document.querySelectorAll('.txt-payroll')[0].innerText = trans[l].payroll || trans[l].pay;
-        document.querySelectorAll('.txt-vacation')[0].innerText = trans[l].vac;
-        document.querySelectorAll('.txt-archive')[0].innerText = trans[l].archive;
-        document.querySelectorAll('.txt-renewal')[0].innerText = trans[l].renewal;
-        document.querySelectorAll('.txt-hr-letter')[0].innerText = trans[l].hrLetter;
-        document.querySelectorAll('.txt-shift')[0].innerText = trans[l].shift;
-        document.querySelectorAll('.txt-notif')[0].innerText = trans[l].notif;
-        document.querySelectorAll('.txt-contact')[0].innerText = trans[l].contact;
-        document.querySelectorAll('.txt-guide')[0].innerText = trans[l].guide;
-        
-        const reportsTxt = document.querySelectorAll('.txt-reports');
-        if(reportsTxt.length > 0) reportsTxt[0].innerText = trans[l].reports;
-
-        document.getElementById('backTxt').innerText = trans[l].back;
-        document.getElementById('sideTitle').innerText = trans[l].side;
-        document.getElementById('loadingTxt').innerText = trans[l].loading;
-        document.querySelector('.txt-hr-desc').innerText = l === 'ar' ? "نظام إدارة الموارد البشرية" : "HR System";
+    function applyTranslations() {
+        const t = trans[currentLang];
+        document.getElementById('selEyebrow').innerText = t.selEyebrow;
+        document.getElementById('selTitle').innerText = t.selTitle;
+        document.getElementById('selSubtitle').innerText = t.selSubtitle;
+        document.getElementById('empPortalTitle').innerText = t.empTitle;
+        document.getElementById('empPortalDesc').innerText = t.empDesc;
+        document.getElementById('adminPortalTitle').innerText = t.adminTitle;
+        document.getElementById('adminPortalDesc').innerText = t.adminDesc;
+        document.getElementById('empEnterTxt').innerText = t.enter;
+        document.getElementById('adminEnterTxt').innerText = t.enter;
+        document.getElementById('switchPortalTxt').innerText = t.switchPortal;
+        document.getElementById('switchPortalTxt2').innerText = t.switchPortal;
+        document.getElementById('backTxt').innerText = t.back;
+        document.getElementById('loadingTxt').innerText = t.loading;
+        renderSidebar();
     }
 
     if ('serviceWorker' in navigator) {
