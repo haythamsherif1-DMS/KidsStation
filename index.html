@@ -251,6 +251,102 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loadingTxt { color: var(--HR-blue-contrast); }
         iframe { width: 100%; height: calc(100vh - 65px); border: none; display: block; visibility: hidden; }
+
+        /* ===== Rate Us floating button ===== */
+        .rate-us-fab {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 60px;
+            padding: 16px 8px;
+            background: linear-gradient(160deg, var(--HR-orange), var(--HR-red));
+            color: #fff;
+            border: none;
+            border-radius: 16px 0 0 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(227,29,43,0.35);
+            transition: width .3s cubic-bezier(.4,0,.2,1), padding .3s ease;
+            text-align: center;
+            transform-origin: center right;
+            animation: rateFabRock 3.2s ease-in-out infinite, rateFabGlow 2.6s ease-in-out infinite;
+        }
+        html[dir="ltr"] .rate-us-fab { right: auto; left: 0; border-radius: 0 16px 16px 0; transform-origin: center left; }
+        .rate-us-fab:hover { width: 76px; animation-play-state: running; }
+        .rate-us-fab span { position: relative; z-index: 2; font-size: 0.72rem; font-weight: 800; line-height: 1.25; }
+
+        .rate-us-shine {
+            position: absolute; inset: 0; overflow: hidden;
+            border-radius: inherit; pointer-events: none;
+        }
+        .rate-us-shine::after {
+            content: '';
+            position: absolute; top: -60%; left: -70%;
+            width: 45%; height: 220%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,.65), transparent);
+            transform: rotate(20deg);
+            animation: rateShineSweep 3.2s ease-in-out infinite;
+        }
+        @keyframes rateShineSweep {
+            0%, 30% { left: -70%; }
+            65%, 100% { left: 140%; }
+        }
+
+        .rate-us-fab i.rate-us-icon {
+            position: relative; z-index: 2;
+            font-size: 1.4rem;
+            animation: rateStarPop 1.4s ease-in-out infinite;
+        }
+        @keyframes rateStarPop {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.3) rotate(-16deg); }
+            50% { transform: scale(1.05) rotate(10deg); }
+            75% { transform: scale(1.3) rotate(-10deg); }
+        }
+
+        .rate-sparkle {
+            position: absolute;
+            font-size: 0.5rem;
+            color: #fff;
+            opacity: 0;
+            z-index: 3;
+            pointer-events: none;
+            animation: rateSparkleTwinkle 2.4s ease-in-out infinite;
+        }
+        .rate-sparkle-1 { top: 12px; left: 8px; animation-delay: .3s; }
+        .rate-sparkle-2 { bottom: 30px; left: 10px; animation-delay: 1.15s; font-size: 0.4rem; }
+        html[dir="ltr"] .rate-sparkle-1 { left: auto; right: 8px; }
+        html[dir="ltr"] .rate-sparkle-2 { left: auto; right: 10px; }
+        @keyframes rateSparkleTwinkle {
+            0%, 100% { opacity: 0; transform: scale(.2) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        @keyframes rateFabRock {
+            0%, 100% { transform: translateY(-50%) rotate(0deg) scale(1); }
+            8%  { transform: translateY(-50%) rotate(-8deg) scale(1.05); }
+            16% { transform: translateY(-50%) rotate(7deg) scale(1.05); }
+            24% { transform: translateY(-50%) rotate(-5deg) scale(1.03); }
+            32% { transform: translateY(-50%) rotate(3deg) scale(1.02); }
+            40%, 85% { transform: translateY(-50%) rotate(0deg) scale(1); }
+        }
+        @keyframes rateFabGlow {
+            0%, 100% { box-shadow: 0 8px 25px rgba(227,29,43,0.35); }
+            50% { box-shadow: 0 10px 42px rgba(227,29,43,0.75); }
+        }
+
+        @media (max-width: 576px) {
+            .rate-us-fab { width: 48px; padding: 12px 6px; gap: 4px; }
+            .rate-us-fab:hover { width: 58px; }
+            .rate-us-fab i.rate-us-icon { font-size: 1.15rem; }
+            .rate-us-fab span { font-size: 0.62rem; }
+        }
     </style>
 </head>
 <body>
@@ -269,6 +365,15 @@
         <div class="lang-toggle" onclick="toggleLanguage()" id="langBtn">EN</div>
     </div>
 </nav>
+
+<!-- ===== Rate Us Floating Button ===== -->
+<button type="button" class="rate-us-fab" id="rateUsFab" onclick="openRateUs()" title="قيّم تجربتك">
+    <span class="rate-us-shine"></span>
+    <span class="rate-sparkle rate-sparkle-1"><i class="fas fa-star"></i></span>
+    <span class="rate-sparkle rate-sparkle-2"><i class="fas fa-star"></i></span>
+    <i class="fas fa-star rate-us-icon"></i>
+    <span id="rateUsTxt">قيّم الابلكيشن</span>
+</button>
 
 <!-- ===== Portal Selection Screen ===== -->
 <div class="selection-screen" id="selectionScreen">
@@ -371,6 +476,12 @@
     const iframe = document.getElementById('appIframe');
     const loader = document.getElementById('globalLoader');
 
+    // ===== Rate Us =====
+    const RATE_US_URL = 'https://script.google.com/macros/s/AKfycbxx3nBNuWJ7WRV05T3YpJL5qaesZkN4G5OH8b9nm4JWqqUbb4gU91swVz7axlqUsA9m/exec';
+    function openRateUs() {
+        openInApp(RATE_US_URL, trans[currentLang].rateUsTitle);
+    }
+
     // ===== Link definitions =====
     const LINKS = {
         employee: [
@@ -421,6 +532,7 @@
             adminTitle: 'بوابة الإدارة', adminDesc: 'إدارة شؤون الموظفين والأرشيف والتقارير',
             enter: 'دخول', switchPortal: 'تبديل البوابة', back: 'رجوع', loading: 'جاري التحميل...',
             sideEmployee: 'بوابة الموظف', sideAdmin: 'بوابة الإدارة',
+            rateUsBtn: 'قيّم الابلكيشن', rateUsTitle: 'قيّم تجربتك',
             items: {
                 finger: 'البصمة الذكية', shift: 'سجّل شفتك اليومي', db: 'بيانات الموظفين',
                 payroll: 'مفردات المرتب', vacation: 'الإجازات والأذونات', archive: 'أرشيف ملفات الموظفين',
@@ -434,6 +546,7 @@
             adminTitle: 'Admin Portal', adminDesc: 'Manage employee affairs, archive and reports',
             enter: 'Enter', switchPortal: 'Switch Portal', back: 'Back', loading: 'Loading...',
             sideEmployee: 'Employee Portal', sideAdmin: 'Admin Portal',
+            rateUsBtn: 'Rate Us', rateUsTitle: 'Rate Your Experience',
             items: {
                 finger: 'Smart Fingerprint', shift: 'Set Your Shift', db: 'Employee Data',
                 payroll: 'Payroll', vacation: 'Vacations', archive: 'HR Archive',
@@ -582,6 +695,8 @@
         document.getElementById('switchPortalTxt2').innerText = t.switchPortal;
         document.getElementById('backTxt').innerText = t.back;
         document.getElementById('loadingTxt').innerText = t.loading;
+        document.getElementById('rateUsTxt').innerText = t.rateUsBtn;
+        document.getElementById('rateUsFab').title = t.rateUsTitle;
         renderSidebar();
     }
 
