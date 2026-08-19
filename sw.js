@@ -1,11 +1,11 @@
-const CACHE_NAME = 'edrak-cache-v1.38';
+const CACHE_NAME = 'edrak-cache-v1.39';
 // قائمة الملفات والصور اللي عاوزينها تتحمل وتتحفظ
-const CACHE_NAME = 'edrak-cache-v1.38'; // ارفع الإصدار هنا أيضاً
+const CACHE_NAME = 'edrak-cache-v1.39'; // ارفع الإصدار هنا أيضاً
 const urlsToCache = [
-  './index.html?v=1.38',
-  './manifest.json?v=1.38',
-  './script.js?v=1.38',
-  './icon.png?v=1.38', // أضف الأيقونة هنا برقم إصدار جديد
+  './index.html?v=1.39',
+  './manifest.json?v=1.39',
+  './script.js?v=1.39',
+  './icon.png?v=1.39', // أضف الأيقونة هنا برقم إصدار جديد
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'
 ];
