@@ -347,6 +347,52 @@
             .rate-us-fab i.rate-us-icon { font-size: 1.15rem; }
             .rate-us-fab span { font-size: 0.62rem; }
         }
+
+        /* ===== Admin Password Modal ===== */
+        .admin-pass-icon-wrap {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: rgba(243,112,33,0.14); color: var(--HR-orange);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.7rem; margin: 0 auto 16px;
+        }
+        #adminPassInput {
+            background: var(--soft-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-dark);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        #adminPassInput:focus {
+            outline: none;
+            border-color: var(--HR-orange);
+            box-shadow: 0 0 0 3px rgba(243,112,33,0.15);
+        }
+        #adminPassError {
+            color: var(--HR-red);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 10px;
+            display: none;
+        }
+        .btn-admin-confirm {
+            background: linear-gradient(135deg, var(--HR-orange), var(--HR-red));
+            color: #fff; border: none; padding: 11px 0; width: 100%;
+            border-radius: 12px; font-weight: 700; margin-top: 16px;
+            transition: .3s; cursor: pointer;
+        }
+        .btn-admin-confirm:hover { filter: brightness(1.08); }
+        .btn-admin-cancel {
+            background: transparent; border: none; color: var(--muted-text);
+            width: 100%; padding: 8px 0; font-weight: 600; margin-top: 6px; cursor: pointer;
+        }
+        .btn-admin-cancel:hover { color: var(--text-dark); }
+        #adminPassModal .modal-content {
+            height: auto; border-radius: 20px; padding: 30px 26px;
+        }
+        #adminPassModal .modal-dialog { max-width: 380px; margin: 1.75rem auto; }
     </style>
 </head>
 <body>
@@ -396,7 +442,7 @@
             </div>
             <span class="portal-card-cta"><span id="empEnterTxt">دخول</span> <i class="fas fa-arrow-left"></i></span>
         </div>
-        <div class="portal-card admin-card animate__animated animate__fadeInUp" style="animation-delay:.1s" onclick="selectPortal('admin')">
+        <div class="portal-card admin-card animate__animated animate__fadeInUp" style="animation-delay:.1s" onclick="attemptAdminAccess()">
             <div class="portal-icon-wrap"><i class="fas fa-user-tie"></i></div>
             <h3 class="portal-card-title" id="adminPortalTitle">بوابة الإدارة</h3>
             <p class="portal-card-desc" id="adminPortalDesc">إدارة شؤون الموظفين والأرشيف والتقارير</p>
@@ -464,6 +510,23 @@
     </div>
 </div>
 
+<!-- ===== Admin Password Gate Modal ===== -->
+<div class="modal fade" id="adminPassModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="text-center">
+                <div class="admin-pass-icon-wrap"><i class="fas fa-lock"></i></div>
+                <h5 class="fw-bold mb-1" id="adminPassTitle">دخول بوابة الإدارة</h5>
+                <p class="mb-3" style="color:var(--muted-text); font-size:0.9rem;" id="adminPassSubtitle">من فضلك أدخل كلمة المرور للمتابعة</p>
+                <input type="password" id="adminPassInput" class="form-control" placeholder="كلمة المرور" autocomplete="off">
+                <div id="adminPassError">كلمة المرور غير صحيحة</div>
+                <button type="button" class="btn-admin-confirm" onclick="checkAdminPassword()" id="adminPassConfirmTxt">تأكيد</button>
+                <button type="button" class="btn-admin-cancel" data-bs-dismiss="modal" id="adminPassCancelTxt">إلغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let currentLang = 'ar';
@@ -475,6 +538,39 @@
     const modal = new bootstrap.Modal(modalEl);
     const iframe = document.getElementById('appIframe');
     const loader = document.getElementById('globalLoader');
+
+    // ===== Admin portal password gate =====
+    const ADMIN_PASSWORD = 'Dina2030@';
+    const adminPassModalEl = document.getElementById('adminPassModal');
+    const adminPassModal = new bootstrap.Modal(adminPassModalEl);
+    const adminPassInput = document.getElementById('adminPassInput');
+    const adminPassError = document.getElementById('adminPassError');
+
+    function attemptAdminAccess() {
+        adminPassInput.value = '';
+        adminPassError.style.display = 'none';
+        adminPassModal.show();
+        setTimeout(() => adminPassInput.focus(), 300);
+    }
+
+    function checkAdminPassword() {
+        if (adminPassInput.value === ADMIN_PASSWORD) {
+            adminPassError.style.display = 'none';
+            adminPassModal.hide();
+            selectPortal('admin');
+        } else {
+            adminPassError.style.display = 'block';
+            adminPassInput.value = '';
+            adminPassInput.focus();
+        }
+    }
+
+    adminPassInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkAdminPassword();
+        }
+    });
 
     // ===== Rate Us =====
     const RATE_US_URL = 'https://script.google.com/macros/s/AKfycbxx3nBNuWJ7WRV05T3YpJL5qaesZkN4G5OH8b9nm4JWqqUbb4gU91swVz7axlqUsA9m/exec';
@@ -536,6 +632,9 @@
             enter: 'دخول', switchPortal: 'تبديل البوابة', back: 'رجوع', loading: 'جاري التحميل...',
             sideEmployee: 'بوابة الموظف', sideAdmin: 'بوابة الإدارة',
             rateUsBtn: 'قيّم الابلكيشن', rateUsTitle: 'قيّم تجربتك',
+            adminPassTitle: 'دخول بوابة الإدارة', adminPassSubtitle: 'من فضلك أدخل كلمة المرور للمتابعة',
+            adminPassPlaceholder: 'كلمة المرور', adminPassWrong: 'كلمة المرور غير صحيحة',
+            adminPassConfirm: 'تأكيد', adminPassCancel: 'إلغاء',
             items: {
                 finger: 'البصمة الذكية', shift: 'سجّل شفتك اليومي', db: 'بيانات الموظفين',
                 payroll: 'مفردات المرتب', vacation: 'الإجازات والأذونات', archive: 'أرشيف ملفات الموظفين',
@@ -551,6 +650,9 @@
             enter: 'Enter', switchPortal: 'Switch Portal', back: 'Back', loading: 'Loading...',
             sideEmployee: 'Employee Portal', sideAdmin: 'Admin Portal',
             rateUsBtn: 'Rate Us', rateUsTitle: 'Rate Your Experience',
+            adminPassTitle: 'Admin Portal Access', adminPassSubtitle: 'Please enter the password to continue',
+            adminPassPlaceholder: 'Password', adminPassWrong: 'Incorrect password',
+            adminPassConfirm: 'Confirm', adminPassCancel: 'Cancel',
             items: {
                 finger: 'Smart Fingerprint', shift: 'Set Your Shift', db: 'Employee Data',
                 payroll: 'Payroll', vacation: 'Vacations', archive: 'HR Archive',
@@ -702,6 +804,12 @@
         document.getElementById('loadingTxt').innerText = t.loading;
         document.getElementById('rateUsTxt').innerText = t.rateUsBtn;
         document.getElementById('rateUsFab').title = t.rateUsTitle;
+        document.getElementById('adminPassTitle').innerText = t.adminPassTitle;
+        document.getElementById('adminPassSubtitle').innerText = t.adminPassSubtitle;
+        document.getElementById('adminPassInput').placeholder = t.adminPassPlaceholder;
+        document.getElementById('adminPassError').innerText = t.adminPassWrong;
+        document.getElementById('adminPassConfirmTxt').innerText = t.adminPassConfirm;
+        document.getElementById('adminPassCancelTxt').innerText = t.adminPassCancel;
         renderSidebar();
     }
 
